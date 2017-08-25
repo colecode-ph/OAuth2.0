@@ -50,6 +50,7 @@ def gconnect():
         oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
+        print credentials.to_json()
     except FlowExchangeError:
         response = make_response(json.dumps('Failed to upgrade the authorization code.'), 401)
         response.headers['Content-Type'] = 'application/json'
@@ -120,6 +121,7 @@ def gconnect():
 @app.route('/gdisconnect')
 def gdisconnect():
     access_token = login_session.get('access_token')
+
     if access_token is None:
 
         print 'Access Token is None'
@@ -128,15 +130,24 @@ def gdisconnect():
         response.headers['Content-type'] = 'application/json'
         return response
 
-    print 'In gdisconnect access token is %s' % access_token
+    print 'In gdisconnect access token is:'
+    print access_token
+    print
     print 'User name is: '
     print login_session['username']
-
-    url = 'https://accounts.google.com/o/oauth/revoke?token=%s' % login_session['access_token']
+    print
+    print 'full login_session info:'
+    print login_session
+    # url = "https://accounts.google.com/o/oauth/revoke?token=%s" % login_session['access_token']
+    url = "https://accounts.google.com/o/oauth2/revoke?token=%s" % login_session['access_token']
+    print
+    print 'url is:'
+    print url
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
 
-    print 'result is '
+    print
+    print 'result of GET request to url is: '
     print result
 
     if result['status'] == '200':
