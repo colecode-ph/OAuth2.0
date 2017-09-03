@@ -1,0 +1,5 @@
+.vagrant/
+OauthInfo.txt
+client_secret_original.json 
+client_secrets.json 
+database_setup.pyc
