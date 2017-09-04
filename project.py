@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, jsonify, url_for, f
 
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Restaurant, MenuItem
+from database_setup_users import Base, Restaurant, MenuItem, User
 
 # new imports for Oauth section
 from flask import session as login_session
@@ -112,7 +112,10 @@ def gconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px; border-radius: 150px; -webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += (''' " style = "width: 300px; height: 300px;
+               border-radius: 150px; -webkit-border-radius:
+               150px;-moz-border-radius: 150px;"> '''
+            )
     flash("you are now logged in as %s" % login_session['email'])
     print "done!"
     return output
@@ -250,7 +253,11 @@ def newMenuItem(restaurant_id):
       return redirect('/login')
   restaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
   if request.method == 'POST':
-      newItem = MenuItem(name = request.form['name'], description = request.form['description'], price = request.form['price'], course = request.form['course'], restaurant_id = restaurant_id)
+      newItem = MenuItem(name = request.form['name'],
+                         description = request.form['description'],
+                         price = request.form['price'],
+                         course = request.form['course'],
+                         restaurant_id = restaurant_id)
       session.add(newItem)
       session.commit()
       flash('New Menu %s Item Successfully Created' % (newItem.name))
@@ -279,7 +286,10 @@ def editMenuItem(restaurant_id, menu_id):
         flash('Menu Item Successfully Edited')
         return redirect(url_for('showMenu', restaurant_id = restaurant_id))
     else:
-        return render_template('editmenuitem.html', restaurant_id = restaurant_id, menu_id = menu_id, item = editedItem)
+        return render_template('editmenuitem.html',
+                                restaurant_id = restaurant_id,
+                                menu_id = menu_id,
+                                item = editedItem)
 
 
 #Delete a menu item
