@@ -225,6 +225,10 @@ def editRestaurant(restaurant_id):
   if 'username' not in login_session:
       return redirect('/login')
   editedRestaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
+  if editedRestaurant.user_id != login_session['user_id']:
+      print "user_id for this restaurant is: %s " % editedRestaurant.user_id
+      return redirect('/login')
+  print "user_id for this restaurant is: %s " % editedRestaurant.user_id
   if request.method == 'POST':
       if request.form['name']:
         editedRestaurant.name = request.form['name']
