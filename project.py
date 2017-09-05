@@ -111,6 +111,10 @@ def gconnect():
     user_id = getUserID(login_session['email'])
     if not user_id:
         user_id = createUser(login_session)
+    login_session['user_id'] = user_id
+
+    print "The user id is:"
+    print user_id
 
 
     output = ''
@@ -207,7 +211,7 @@ def newRestaurant():
       return redirect('/login')
   if request.method == 'POST':
       newRestaurant = Restaurant(name = request.form['name'],
-        user_id = login_session['user_id'])
+                                 user_id = login_session['user_id'])
       session.add(newRestaurant)
       flash('New Restaurant %s Successfully Created' % newRestaurant.name)
       session.commit()
@@ -314,7 +318,7 @@ def deleteMenuItem(restaurant_id,menu_id):
         flash('Menu Item Successfully Deleted')
         return redirect(url_for('showMenu', restaurant_id = restaurant_id))
     else:
-        return render_template('deleteMenuItem.html', item = itemToDelete)
+        return render_template('deletemenuitem.html', item = itemToDelete)
 
 
 def getUserID(email):
